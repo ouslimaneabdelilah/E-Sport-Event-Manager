@@ -1,5 +1,5 @@
 <?php
-namespace App\Database;
+namespace App\Core\Database;
 abstract class Database{
    private static Database $instance = null;
    private \PDO $connexion;
