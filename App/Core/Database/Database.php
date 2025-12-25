@@ -1,7 +1,7 @@
 <?php
 namespace App\Core\Database;
-abstract class Database{
-   private static Database $instance = null;
+class Database{
+   private static $instance = null;
    private \PDO $connexion;
    private string $username = "root";
    private string $host = "localhost";
@@ -23,3 +23,4 @@ abstract class Database{
    }
 }
 ?>
+

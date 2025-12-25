@@ -1,6 +1,6 @@
 <?php
-require_once "Core/Kernel/AutoLoding.php";
-use Core\Kernel;
+require_once "App\Core/Kernel/AutoLoding.php";
+use App\Core\Kernel;
 $kernel = new Kernel();
 $kernel->handle();
 ?>

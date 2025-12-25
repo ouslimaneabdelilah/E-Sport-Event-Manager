@@ -1,5 +1,5 @@
 <?php
-namespace Core\Container;
+namespace App\Core\Container;
 
 class ServiceContainer {
     private static $instance = null;

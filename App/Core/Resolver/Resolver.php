@@ -1,7 +1,7 @@
 <?php
-namespace Core\Resolver;
+namespace App\Core\Resolver;
 
-use Core\Container\ServiceContainer;
+use App\Core\Container\ServiceContainer;
 use ReflectionClass;
 
 class Resolver {
