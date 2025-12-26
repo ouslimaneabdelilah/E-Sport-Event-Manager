@@ -1,6 +1,6 @@
 <?php
 namespace App\Engine;
-
+use App\Core\Database\Attributes\Column;
 use ReflectionClass;
 
 class MigrationEngine {
