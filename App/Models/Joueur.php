@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Engine\Column;
+use App\Core\Database\Attributes\Column;
 use App\Engine\Table;
 
 #[Table(name: "joueurs")]

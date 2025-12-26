@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Engine\Column;
+use App\Core\Database\Attributes\OneToMany;
+use App\Core\Database\Attributes\Column;
 use App\Engine\Table;
 
 #[Table(name: "clubs")]
@@ -18,7 +19,8 @@ class Club {
 
     #[Column(name: 'string', type: 'TIMESTAMP')]
     private ?string $created_at = null;
-
+    #[OneToMany(entity: Equipe::class, fergienKey: 'club_id')]
+    public array $equipes = [];
     public function setId(?int $id): void {
         $this->id = $id;
     }
