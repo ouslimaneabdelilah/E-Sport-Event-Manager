@@ -6,5 +6,6 @@ interface EntityInterface{
     public function delete(int $id,string $className);
     public function findAll(string $className);
     public function find(int $id,string $className);
+    // public function serch(string $query, string $className);
     
 }

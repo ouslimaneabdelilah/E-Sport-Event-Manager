@@ -2,34 +2,74 @@
 
 namespace App\Core\Database;
 
+use App\Core\Database\Attributes\Column;
 use App\Core\Database\EntityInterface;
+use App\Services\EagerLoad;
 use App\Core\Hydrator\Hydrator;
+use App\Engine\Table;
 use ReflectionClass;
 use PDO;
+use Reflection;
 
 class EntityManager implements EntityInterface
 {
     private PDO $db;
+    private EagerLoad $eg;
     private Hydrator $hydrator;
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $db,EagerLoad $eg,Hydrator $hydrator)
     {
         $this->db = $db;
-        $this->hydrator = new Hydrator();
+        $this->eg = $eg;
+        $this->hydrator = $hydrator;
     }
+
+
+
+    public function findAll(string $className, array $with = [])
+    {
+        $reflection = new ReflectionClass($className);
+        $tableName = strtolower($reflection->getShortName()) . "s";
+
+        $stmt = $this->db->prepare("SELECT * FROM {$tableName}");
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $entities = [];
+        $ids = [];
+
+        foreach ($results as $row) {
+            $entity = new $className();
+            $this->hydrator->hydrate($entity, $row);
+            $entities[$row['id']] = $entity;
+            $ids[] = $row['id'];
+        }
+        
+        if (empty($entities)) return [];
+        
+        foreach ($with as $relationName) {
+            $this->eg->eagerLoad($entities, $ids, $relationName, $reflection);
+        }
+        var_dump($entities);
+        return array_values($entities);
+    }
+
 
     public function save(object $obj)
     {
         $reflection = new ReflectionClass($obj);
         $tableName = strtolower($reflection->getShortName()) . "s";
         $props = $reflection->getProperties();
-        
+
         $columns = [];
         $params = [];
         $values = [];
 
-        foreach ($props as $prop) {    
+        foreach ($props as $prop) {
             $name = $prop->getName();
+            $columnAttribute = $prop->getAttributes(Column::class);
+            if(!$columnAttribute){
+                continue;
+            }
             $value = $prop->getValue($obj);
 
             if ($name !== 'id' && $value !== null) {
@@ -49,13 +89,17 @@ class EntityManager implements EntityInterface
         $reflection = new ReflectionClass($obj);
         $tableName = strtolower($reflection->getShortName()) . "s";
         $props = $reflection->getProperties();
-        
+
         $params = [];
         $values = [];
         $id = null;
 
-        foreach ($props as $prop) {         
+        foreach ($props as $prop) {
             $name = $prop->getName();
+            $columnAttribute = $prop->getAttributes(Column::class);
+            if(!$columnAttribute){
+                continue;
+            }
             $value = $prop->getValue($obj);
 
             if ($name === 'id') {
@@ -74,25 +118,6 @@ class EntityManager implements EntityInterface
         return $stmt->execute($values);
     }
 
-    public function findAll(string $className)
-    {
-        $reflection = new ReflectionClass($className);
-        $tableName = strtolower($reflection->getShortName()) . "s";
-        
-        $stmt = $this->db->prepare("SELECT * FROM {$tableName}");
-        $stmt->execute();
-
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $entities = [];
-
-        foreach ($results as $row) {
-            $entity = new $className();
-            $this->hydrator->hydrate($entity, $row);
-            $entities[] = $entity;
-        }
-        var_dump($entities);
-        return $entities;
-    }
 
     public function delete(int $id, string $className)
     {
@@ -102,7 +127,7 @@ class EntityManager implements EntityInterface
         return $stmt->execute([$id]);
     }
 
-        public function find($id, $className)
+    public function find($id, $className)
     {
         $refelction = new \ReflectionClass($className);
         $tableName = strtolower($refelction->getShortName()) . "s";
