@@ -17,7 +17,7 @@ class Club {
     #[Column(name: 'ville', type: 'VARCHAR')]
     private string $ville;
 
-    #[Column(name: 'string', type: 'TIMESTAMP')]
+    #[Column(name: 'created_at', type: 'TIMESTAMP')]
     private ?string $created_at = null;
     #[OneToMany(entity: Equipe::class, fergienKey: 'club_id')]
     public array $equipes = [];
@@ -45,11 +45,11 @@ class Club {
         return $this->ville;
     }
 
-    public function setCreated_at(?string $created_at): void {
+    public function setCreatedAt(?string $created_at): void {
         $this->created_at = $created_at;
     }
 
-    public function getCreated_at(): ?string {
+    public function getCreatedAt(): ?string {
         return $this->created_at;
     }
 }

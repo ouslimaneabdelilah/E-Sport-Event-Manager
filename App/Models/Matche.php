@@ -3,95 +3,153 @@
 namespace App\Models;
 
 use App\Core\Database\Attributes\Column;
+use App\Core\Database\Attributes\BelongsTo;
 use App\Engine\Table;
 
 #[Table(name: "matches")]
-class Matche {
+class Matche
+{
     #[Column(name: 'id', type: 'INT', primaryKey: true)]
     private ?int $id = null;
 
     #[Column(name: 'score_a', type: 'INT')]
-    private int $score_a = 0;
+    private int $scoreA = 0;
 
     #[Column(name: 'score_b', type: 'INT')]
-    private int $score_b = 0;
+    private int $scoreB = 0;
 
     #[Column(name: 'equipe_a_id', type: 'INT', foreignkey: true)]
-    private int $equipe_a_id;
+    private int $equipeAId;
+
+    #[BelongsTo(entity: Equipe::class, foreignKey: 'equipe_a_id')]
+    private ?Equipe $equipeA = null;
 
     #[Column(name: 'equipe_b_id', type: 'INT', foreignkey: true)]
-    private int $equipe_b_id;
+    private int $equipeBId;
+
+    #[BelongsTo(entity: Equipe::class, foreignKey: 'equipe_b_id')]
+    private ?Equipe $equipeB = null;
 
     #[Column(name: 'tournoi_id', type: 'INT', foreignkey: true)]
-    private int $tournoi_id;
+    private int $tournoiId;
+
+    #[BelongsTo(entity: Tournoi::class, foreignKey: 'tournoi_id')]
+    private ?Tournoi $tournoi = null;
 
     #[Column(name: 'winer_id', type: 'INT', foreignkey: true)]
-    private ?int $winer_id = null;
+    private ?int $winerId = null;
+
+    #[BelongsTo(entity: Equipe::class, foreignKey: 'winer_id')]
+    private ?Equipe $winner = null;
 
     #[Column(name: 'created_at', type: 'TIMESTAMP')]
-    private ?string $created_at = null;
+    private ?string $createdAt = null;
 
-    public function setId(?int $id): void {
+    public function setId(?int $id): void
+    {
         $this->id = $id;
     }
-
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    public function setScore_a(int $score_a): void {
-        $this->score_a = $score_a;
+    public function setScoreA(int $scoreA): void
+    {
+        $this->scoreA = $scoreA;
+    }
+    public function getScoreA(): int
+    {
+        return $this->scoreA;
     }
 
-    public function getScore_a(): int {
-        return $this->score_a;
+    public function setScoreB(int $scoreB): void
+    {
+        $this->scoreB = $scoreB;
+    }
+    public function getScoreB(): int
+    {
+        return $this->scoreB;
     }
 
-    public function setScore_b(int $score_b): void {
-        $this->score_b = $score_b;
+    public function setEquipeAId(int $equipeAId): void
+    {
+        $this->equipeAId = $equipeAId;
+    }
+    public function getEquipeAId(): int
+    {
+        return $this->equipeAId;
     }
 
-    public function getScore_b(): int {
-        return $this->score_b;
+    public function setEquipeA(?Equipe $equipeA): void
+    {
+        $this->equipeA = $equipeA;
+    }
+    public function getEquipeA(): ?Equipe
+    {
+        return $this->equipeA;
     }
 
-    public function setEquipe_a_id(int $equipe_a_id): void {
-        $this->equipe_a_id = $equipe_a_id;
+    public function setEquipeBId(int $equipeBId): void
+    {
+        $this->equipeBId = $equipeBId;
+    }
+    public function getEquipeBId(): int
+    {
+        return $this->equipeBId;
     }
 
-    public function getEquipe_a_id(): int {
-        return $this->equipe_a_id;
+    public function setEquipeB(?Equipe $equipeB): void
+    {
+        $this->equipeB = $equipeB;
+    }
+    public function getEquipeB(): ?Equipe
+    {
+        return $this->equipeB;
     }
 
-    public function setEquipe_b_id(int $equipe_b_id): void {
-        $this->equipe_b_id = $equipe_b_id;
+    public function setTournoiId(int $tournoiId): void
+    {
+        $this->tournoiId = $tournoiId;
+    }
+    public function getTournoiId(): int
+    {
+        return $this->tournoiId;
     }
 
-    public function getEquipe_b_id(): int {
-        return $this->equipe_b_id;
+    public function setTournoi(?Tournoi $tournoi): void
+    {
+        $this->tournoi = $tournoi;
+    }
+    public function getTournoi(): ?Tournoi
+    {
+        return $this->tournoi;
     }
 
-    public function setTournoi_id(int $tournoi_id): void {
-        $this->tournoi_id = $tournoi_id;
+    public function setWinerId(?int $winerId): void
+    {
+        $this->winerId = $winerId;
+    }
+    public function getWinerId(): ?int
+    {
+        return $this->winerId;
     }
 
-    public function getTournoi_id(): int {
-        return $this->tournoi_id;
+    public function setWinner(?Equipe $winner): void
+    {
+        $this->winner = $winner;
+    }
+    public function getWinner(): ?Equipe
+    {
+        return $this->winner;
     }
 
-    public function setWiner_id(?int $winer_id): void {
-        $this->winer_id = $winer_id;
+    public function setCreatedAt(?string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
-
-    public function getWiner_id(): ?int {
-        return $this->winer_id;
-    }
-
-    public function setCreated_at(?string $created_at): void {
-        $this->created_at = $created_at;
-    }
-
-    public function getCreated_at(): ?string {
-        return $this->created_at;
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
     }
 }

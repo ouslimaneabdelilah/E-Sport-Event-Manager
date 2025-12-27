@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Core\Database\Attributes\Column;
 use App\Engine\Table;
+use App\Core\Database\Attributes\BelongsTo;
 
 #[Table(name: "equipes")]
 class Equipe {
@@ -18,6 +19,9 @@ class Equipe {
 
     #[Column(name: 'club_id', type: 'INT', foreignkey: true)]
     private int $club_id;
+
+    #[BelongsTo(entity: Club::class, foreignKey: 'club_id')]
+    private ?Club $club = null;
 
     #[Column(name: 'created_at', type: 'TIMESTAMP')]
     private ?string $created_at = null;
@@ -46,19 +50,19 @@ class Equipe {
         return $this->jeu;
     }
 
-    public function setClub_id(int $club_id): void {
+    public function setClubId(int $club_id): void {
         $this->club_id = $club_id;
     }
 
-    public function getClub_id(): int {
+    public function getClubId(): int {
         return $this->club_id;
     }
 
-    public function setCreated_at(?string $created_at): void {
+    public function setCreatedAt(?string $created_at): void {
         $this->created_at = $created_at;
     }
 
-    public function getCreated_at(): ?string {
+    public function getCreatedAt(): ?string {
         return $this->created_at;
     }
 }

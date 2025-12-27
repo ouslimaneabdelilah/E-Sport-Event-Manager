@@ -1,21 +1,21 @@
 <?php
+
 namespace App\Core\Hydrator;
 
 use ReflectionClass;
 
-class Hydrator {
+class Hydrator
+{
 
-    public function hydrate(object $object, array $data): object {
+    public function hydrate(object $object, array $data): object
+    {
         $reflection = new ReflectionClass($object);
-
         foreach ($data as $key => $value) {
-            $methodName = 'set' . ucfirst($key);
+            $methodName = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
             if ($reflection->hasMethod($methodName)) {
-                $method = $reflection->getMethod($methodName);
-                $method->invoke($object, $value);
+                $object->$methodName($value);
             }
         }
-
         return $object;
     }
 }
