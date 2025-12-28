@@ -38,17 +38,17 @@ CREATE TABLE tournois (
 
 CREATE TABLE matches (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    score_a INT,
-    score_b INT,
+    score_a INT DEFAULT 0,
+    score_b INT DEFAULT 0,
     equipe_a_id INT NOT NULL,
     equipe_b_id INT NOT NULL,
     tournoi_id INT NOT NULL,
-    winer_id INT,
+    winer_id INT NULL,
     FOREIGN KEY (equipe_a_id) REFERENCES equipes(id),
-    FOREIGN KEY (equipe_b_id) REFERENCES equipes(equipe_id),
-    FOREIGN KEY (tournoi_id) REFERENCES tournois(tournoi_id),
-    INDEX idx_teams_tournament (equipe_a_id, equipe_b_id, tournoi_id)
-    FOREIGN KEY (winer_id) REFERENCES equipes(equipe_id),
+    FOREIGN KEY (equipe_b_id) REFERENCES equipes(id),
+    FOREIGN KEY (tournoi_id) REFERENCES tournois(id),
+    FOREIGN KEY (winer_id) REFERENCES equipes(id),
+    INDEX idx_teams_tournament (equipe_a_id, equipe_b_id, tournoi_id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

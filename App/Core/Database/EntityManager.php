@@ -17,7 +17,7 @@ class EntityManager implements EntityInterface
     private EagerLoad $eg;
     private Hydrator $hydrator;
 
-    public function __construct(PDO $db,EagerLoad $eg,Hydrator $hydrator)
+    public function __construct(PDO $db, EagerLoad $eg, Hydrator $hydrator)
     {
         $this->db = $db;
         $this->eg = $eg;
@@ -43,20 +43,19 @@ class EntityManager implements EntityInterface
             $entities[$row['id']] = $entity;
             $ids[] = $row['id'];
         }
-        
+
         if (empty($entities)) return [];
-        
+
         foreach ($with as $relationName) {
             $this->eg->eagerLoad($entities, $ids, $relationName, $reflection);
         }
-        var_dump($entities);
         return array_values($entities);
     }
 
 
     public function save(object $obj)
     {
-        $reflection = new ReflectionClass($obj);
+        $reflection = new \ReflectionClass($obj);
         $tableName = strtolower($reflection->getShortName()) . "s";
         $props = $reflection->getProperties();
 
@@ -66,14 +65,19 @@ class EntityManager implements EntityInterface
 
         foreach ($props as $prop) {
             $name = $prop->getName();
-            $columnAttribute = $prop->getAttributes(Column::class);
-            if(!$columnAttribute){
+            $attributes = $prop->getAttributes(Column::class);
+
+            if (empty($attributes)) {
                 continue;
             }
+
+            $columnAttr = $attributes[0]->newInstance();
+            $dbColumnName = $columnAttr->name;
+
             $value = $prop->getValue($obj);
 
             if ($name !== 'id' && $value !== null) {
-                $columns[] = $name;
+                $columns[] = $dbColumnName;
                 $values[] = $value;
                 $params[] = "?";
             }
@@ -86,7 +90,7 @@ class EntityManager implements EntityInterface
 
     public function update(object $obj)
     {
-        $reflection = new ReflectionClass($obj);
+        $reflection = new \ReflectionClass($obj);
         $tableName = strtolower($reflection->getShortName()) . "s";
         $props = $reflection->getProperties();
 
@@ -96,16 +100,21 @@ class EntityManager implements EntityInterface
 
         foreach ($props as $prop) {
             $name = $prop->getName();
-            $columnAttribute = $prop->getAttributes(Column::class);
-            if(!$columnAttribute){
+            $attributes = $prop->getAttributes(Column::class);
+
+            if (empty($attributes)) {
                 continue;
             }
+
+            $columnAttr = $attributes[0]->newInstance();
+            $dbColumnName = $columnAttr->name;
+
             $value = $prop->getValue($obj);
 
             if ($name === 'id') {
                 $id = $value;
             } elseif ($value !== null) {
-                $params[] = "$name = ?";
+                $params[] = "$dbColumnName = ?";
                 $values[] = $value;
             }
         }
@@ -117,7 +126,6 @@ class EntityManager implements EntityInterface
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($values);
     }
-
 
     public function delete(int $id, string $className)
     {
