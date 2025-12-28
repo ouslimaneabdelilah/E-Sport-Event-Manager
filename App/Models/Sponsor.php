@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Core\Database\Attributes\Column;
+use App\Core\Database\Attributes\BelongsTo;
 use App\Engine\Table;
 
 #[Table(name: "sponsors")]
-class Sponsor {
+class Sponsor
+{
     #[Column(name: 'id', type: 'INT', primaryKey: true)]
     private ?int $id = null;
 
@@ -14,51 +16,68 @@ class Sponsor {
     private string $nom = "";
 
     #[Column(name: 'contribution_financiere', type: 'DECIMAL', m: 10, d: 2)]
-    private float $contribution_financiere = 0.0;
+    private float $contributionFinanciere = 0.0;
 
     #[Column(name: 'tournoi_id', type: 'INT', foreignkey: true)]
-    private int $tournoi_id;
+    private int $tournoiId;
+
+    #[BelongsTo(entity: Tournoi::class, foreignKey: 'tournoi_id')]
+    private ?Tournoi $tournoi = null;
 
     #[Column(name: 'created_at', type: 'TIMESTAMP')]
-    private ?string $created_at = null;
+    private ?string $createdAt = null;
 
-    public function setId(?int $id): void {
+    public function setId(?int $id): void
+    {
         $this->id = $id;
     }
-
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    public function setNom(string $nom): void {
+    public function setNom(string $nom): void
+    {
         $this->nom = $nom;
     }
-
-    public function getNom(): string {
+    public function getNom(): string
+    {
         return $this->nom;
     }
 
-    public function setContribution_financiere(float $contribution_financiere): void {
-        $this->contribution_financiere = $contribution_financiere;
+    public function setContributionFinanciere(float $contributionFinanciere): void
+    {
+        $this->contributionFinanciere = $contributionFinanciere;
+    }
+    public function getContributionFinanciere(): float
+    {
+        return $this->contributionFinanciere;
     }
 
-    public function getContribution_financiere(): float {
-        return $this->contribution_financiere;
+    public function setTournoiId(int $tournoiId): void
+    {
+        $this->tournoiId = $tournoiId;
+    }
+    public function getTournoiId(): int
+    {
+        return $this->tournoiId;
     }
 
-    public function setTournoi_id(int $tournoi_id): void {
-        $this->tournoi_id = $tournoi_id;
+    public function setTournoi(?Tournoi $tournoi): void
+    {
+        $this->tournoi = $tournoi;
+    }
+    public function getTournoi(): ?Tournoi
+    {
+        return $this->tournoi;
     }
 
-    public function getTournoi_id(): int {
-        return $this->tournoi_id;
+    public function setCreatedAt(?string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
     }
-
-    public function setCreated_at(?string $created_at): void {
-        $this->created_at = $created_at;
-    }
-
-    public function getCreated_at(): ?string {
-        return $this->created_at;
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
     }
 }

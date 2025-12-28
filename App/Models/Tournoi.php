@@ -21,10 +21,10 @@ class Tournoi
     #[Column(name: 'format', type: 'VARCHAR')]
     private string $format = "";
 
-    #[OneToMany(entity: Matche::class, foreignKey: 'tournoi_id')]
+    #[OneToMany(entity: Matche::class, fergienKey: 'tournoi_id')]
     private array $matches = [];
 
-    #[OneToMany(entity: Sponsor::class, foreignKey: 'tournoi_id')]
+    #[OneToMany(entity: Sponsor::class, fergienKey: 'tournoi_id')]
     private array $sponsors = [];
 
     #[Column(name: 'created_at', type: 'TIMESTAMP')]
